@@ -1,0 +1,23 @@
+
+//@version=5
+strategy("Stoch test")
+
+ma50  = ta.ema(close, 50)
+ma150 = ta.ema(close, 150)
+
+//Input values for configuration on the chart
+Length = input.int (defval=5, title = "Stochastic Length", minval=5, step=1)
+k = input.int (defval=5, title = "Stochastic %K", minval=5, step=1)
+d = input.int (defval=5, title = "Stochastic %D", minval=5, step=1)
+
+Sto = ta.stoch (close, high, low, Length)
+K= ta.sma (Sto, k)
+D= ta.sma (Sto, d)
+
+under1 = K < 30 and K>D 
+under2 = under1 and  ma50 > ma150 
+under3 = under2 and close < ma150
+under4 = under3 and close > ma50 
+under = under4
+
+strategy.entry("long", strategy.long, 100, when=under)
